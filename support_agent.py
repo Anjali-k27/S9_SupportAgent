@@ -26,7 +26,7 @@ load_dotenv()
 
 from langchain_core.messages import HumanMessage, AIMessage, SystemMessage, ToolMessage, RemoveMessage
 from langchain_core.tools import tool
-from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_openai import ChatOpenAI
 from langgraph.graph import StateGraph, END
 from langgraph.graph.message import add_messages
 from langgraph.prebuilt import ToolNode
@@ -36,14 +36,25 @@ from presidio_analyzer import AnalyzerEngine
 from presidio_anonymizer import AnonymizerEngine
 
 # ── Environment setup ──────────────────────────────────────────────────────────
-GOOGLE_API_KEY = os.environ.get("GOOGLE_API_KEY")
-if not GOOGLE_API_KEY:
+OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY")
+OPENROUTER_MODEL = os.environ.get("OPENROUTER_MODEL", "openai/gpt-4o-mini")
+
+if not OPENROUTER_API_KEY:
     raise EnvironmentError(
-        "GOOGLE_API_KEY not set. Run: export GOOGLE_API_KEY='your-key-here'"
+        "OPENROUTER_API_KEY not set. Run: export OPENROUTER_API_KEY='your-key-here'"
     )
 
-llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", temperature=0)
-print("[System] Gemini 2.5 Flash initialized | temperature=0")
+llm = ChatOpenAI(
+    model=OPENROUTER_MODEL,
+    api_key=OPENROUTER_API_KEY,
+    base_url="https://openrouter.ai/api/v1",
+    temperature=0,
+    default_headers={
+        "HTTP-Referer": "https://localhost",
+        "X-Title": "S9 Support Agent",
+    },
+)
+print(f"[System] OpenRouter model initialized | model={OPENROUTER_MODEL} | temperature=0")
 
 # ── ReAct Constants (Session 3) ─────────────────────────────────────────────
 MAX_ITERATIONS    = 5

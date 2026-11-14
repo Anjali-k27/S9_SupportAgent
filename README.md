@@ -1,7 +1,7 @@
 # Enterprise AI Support Platform
 ### Session 9 of 12 — Shared Scratchpads & Consensus
 
-A production-grade AI customer support system built progressively over 12 sessions using **LangGraph**, **Google Gemini 2.5 Flash**, and **FastAPI**. Each session adds one architectural layer on top of the last — nothing is ever removed or replaced.
+A production-grade AI customer support system built progressively over 12 sessions using **LangGraph**, **OpenRouter GPT-4o mini**, and **FastAPI**. Each session adds one architectural layer on top of the last — nothing is ever removed or replaced.
 
 ---
 
@@ -20,8 +20,9 @@ source .venv/bin/activate        # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 python -m spacy download en_core_web_lg
 
-# 4. Set your Google API key
-echo "GOOGLE_API_KEY=your-key-here" > .env
+# 4. Set your OpenRouter API key and model
+echo "OPENROUTER_API_KEY=your-key-here" > .env
+echo "OPENROUTER_MODEL=openai/gpt-4o-mini" >> .env
 
 # 5. Run the CLI verification
 python support_agent.py
@@ -41,7 +42,7 @@ session9/
 ├── api.py             # FastAPI server — REST + Server-Sent Events streaming
 ├── index.html         # Single-file frontend — no build step required
 ├── requirements.txt   # Pinned Python dependencies
-├── .env               # GOOGLE_API_KEY (never commit this)
+├── .env               # OPENROUTER_API_KEY + OPENROUTER_MODEL (never commit this)
 └── support.db         # SQLite checkpoint store (auto-created on first run)
 ```
 
@@ -380,7 +381,7 @@ All Session 9 infrastructure (dispatcher, parallel agents, synthesizer) remains 
 
 | Layer | Technology | Version |
 |-------|-----------|---------|
-| LLM | Google Gemini 2.5 Flash | via `langchain-google-genai` |
+| LLM | OpenRouter GPT-4o mini | via `langchain-openai` |
 | Agent framework | LangGraph | 1.2.0 |
 | Tool binding | LangChain Core | 1.4.0 |
 | Persistence | SQLite + `langgraph-checkpoint-sqlite` | — |
